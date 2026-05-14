@@ -1,0 +1,155 @@
+import customtkinter as ctk
+import requests
+from PIL import Image, ImageTk
+from io import BytesIO
+from datetime import datetime
+
+# --- НАСТРОЙКИ ДИЗАЙНА ---
+ctk.set_appearance_mode("light")
+BG_COLOR = "#F0F4F9"  # Светло-голубой фон
+CARD_COLOR = "#FFFFFF"  # Белые карточки
+ACCENT_COLOR = "#6F737E"  # Цвет главного баннера (темно-серый)
+TEXT_COLOR = "#2B2B2B"
+
+
+class WeatherApp(ctk.CTk):
+    def init(self):
+        super().init()
+
+        self.title("Gemini Weather Forecast")
+        self.geometry("1000x800")
+        self.configure(fg_color=BG_COLOR)
+
+        self.api_key = "f0070f4e338513f27ceb7f7f67f1bb47"  # Вставь сюда свой ключ!
+
+        self.setup_ui()
+
+    def setup_ui(self):
+        # 1. Заголовок и поиск
+        self.header_label = ctk.CTkLabel(self, text="Weather Forecast", font=("Inter", 32, "bold"),
+                                         text_color="#7B61FF")
+        self.header_label.pack(pady=(20, 5))
+
+        self.sub_label = ctk.CTkLabel(self, text="Your personal weather companion", font=("Inter", 14),
+                                      text_color="gray")
+        self.sub_label.pack(pady=(0, 20))
+
+        search_frame = ctk.CTkFrame(self, fg_color="transparent")
+        search_frame.pack(fill="x", padx=100, pady=10)
+
+        self.city_entry = ctk.CTkEntry(search_frame, placeholder_text="Search for a city...",
+                                       width=500, height=45, corner_radius=22, border_width=0)
+        self.city_entry.pack(side="left", expand=True, padx=10)
+
+        self.search_btn = ctk.CTkButton(search_frame, text="Search", corner_radius=22, width=100, height=45,
+                                        fg_color="#000000", hover_color="#333333", command=self.update_weather)
+        self.search_btn.pack(side="left")
+
+        # 2. Главный баннер (Bishkek style)
+        self.banner = ctk.CTkFrame(self, height=220, corner_radius=30, fg_color=ACCENT_COLOR)
+#self.banner.pack(fill="x", padx=50, pady=20)
+        self.banner.pack_propagate(False)
+
+        self.main_city = ctk.CTkLabel(self.banner, text="Search a city", font=("Inter", 24), text_color="white")
+        self.main_city.place(x=40, y=30)
+
+        self.main_date = ctk.CTkLabel(self.banner, text="---", font=("Inter", 14), text_color="#D1D1D1")
+        self.main_date.place(x=40, y=65)
+
+        self.main_temp = ctk.CTkLabel(self.banner, text="--°C", font=("Inter", 72, "bold"), text_color="white")
+        self.main_temp.place(x=40, y=90)
+
+        self.main_condition = ctk.CTkLabel(self.banner, text="Waiting...", font=("Inter", 20), text_color="white")
+        self.main_condition.place(x=40, y=170)
+
+        self.weather_icon_label = ctk.CTkLabel(self.banner, text="", width=150, height=150)
+        self.weather_icon_label.place(relx=0.8, rely=0.5, anchor="center")
+
+        # 3. Сетка доп. параметров (Humidity, Wind и т.д.)
+        self.stats_frame = ctk.CTkFrame(self, fg_color="transparent")
+        self.stats_frame.pack(fill="x", padx=50, pady=10)
+
+        self.stat_cards = {}
+        stats = [("Humidity", "65%", 0), ("Wind", "15 km/h", 1), ("Pressure", "1013 mb", 2), ("UV Index", "6", 3)]
+
+        for name, val, col in stats:
+            card = ctk.CTkFrame(self.stats_frame, corner_radius=20, fg_color=CARD_COLOR, height=120)
+            card.grid(row=0, column=col, padx=10, sticky="nsew")
+            self.stats_frame.columnconfigure(col, weight=1)
+
+            ctk.CTkLabel(card, text=name, font=("Inter", 13), text_color="gray").pack(pady=(20, 5))
+            val_lbl = ctk.CTkLabel(card, text=val, font=("Inter", 20, "bold"), text_color=TEXT_COLOR)
+            val_lbl.pack()
+            self.stat_cards[name] = val_lbl
+
+        # 4. Прогноз на неделю (7-Day Forecast)
+        self.forecast_frame = ctk.CTkScrollableFrame(self, label_text="7-Day Forecast",
+                                                     label_font=("Inter", 18, "bold"),
+                                                     fg_color=CARD_COLOR, corner_radius=20, height=250)
+        self.forecast_frame.pack(fill="both", padx=50, pady=20)
+
+    def get_weather_icon(self, icon_code):
+        url = f"http://openweathermap.org/img/wn/{icon_code}@4x.png"
+        response = requests.get(url)
+        img_data = Image.open(BytesIO(response.content))
+        return ctk.CTkImage(light_image=img_data, size=(160, 160))
+
+    def update_weather(self):
+        city = self.city_entry.get()
+        #if not city: return
+# 1. Запрос текущей погоды
+        curr_url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={self.api_key}&units=metric"
+
+        try:
+            data = requests.get(curr_url).json()
+
+            # Обновляем баннер
+            self.main_city.configure(text=data['name'])
+            self.main_temp.configure(text=f"{round(data['main']['temp'])}°C")
+            self.main_condition.configure(text=data['weather'][0]['description'].capitalize())
+            self.main_date.configure(text=datetime.now().strftime("%A, %B %d"))
+
+            # Иконка
+            icon_code = data['weather'][0]['icon']
+            self.weather_icon_label.configure(image=self.get_weather_icon(icon_code))
+
+            # Параметры
+            self.stat_cards["Humidity"].configure(text=f"{data['main']['humidity']}%")
+            self.stat_cards["Wind"].configure(text=f"{data['wind']['speed']} km/h")
+            self.stat_cards["Pressure"].configure(text=f"{data['main']['pressure']} mb")
+
+            # 2. Запрос прогноза (имитация списка)
+            self.update_forecast(city)
+
+        except Exception as e:
+            print(f"Error: {e}")
+            self.main_city.configure(text="City not found")
+
+    def update_forecast(self, city):
+        # Очистка старого прогноза
+        for widget in self.forecast_frame.winfo_children():
+            if isinstance(widget, ctk.CTkFrame): widget.destroy()
+
+        # Для полноценного 7-дневного прогноза нужен платный API или Free "One Call".
+        # Используем стандартный 5-дневный/3-часовой для примера.
+        url = f"http://api.openweathermap.org/data/2.5/forecast?q={city}&appid={self.api_key}&units=metric"
+        data = requests.get(url).json()
+
+        # Берем одну точку прогноза в день (интервал 8 * 3 часа = 24 часа)
+        for i in range(0, len(data['list']), 8):
+            day_data = data['list'][i]
+            date_str = datetime.fromtimestamp(day_data['dt']).strftime("%A")
+            temp = f"{round(day_data['main']['temp'])}°C"
+            desc = day_data['weather'][0]['main']
+
+            row = ctk.CTkFrame(self.forecast_frame, fg_color="transparent")
+            row.pack(fill="x", pady=5)
+
+            ctk.CTkLabel(row, text=date_str, width=150, anchor="w", font=("Inter", 14)).pack(side="left", padx=20)
+            ctk.CTkLabel(row, text=desc, width=150, text_color="gray").pack(side="left")
+            ctk.CTkLabel(row, text=temp, font=("Inter", 14, "bold")).pack(side="right", padx=20)
+
+
+if name == "main":
+    app = WeatherApp()
+    app.mainloop()
