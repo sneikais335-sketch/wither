@@ -46,9 +46,6 @@ class App(ctk.CTk):
         # Main View
         self.views["main"] = MainView(self, self)
         
-        # Saved Cities View
-        self.views["saved"] = SavedCitiesView(self, self)
-        
         # Settings View
         self.views["settings"] = SettingsView(self, self)
         
@@ -61,8 +58,6 @@ class App(ctk.CTk):
             v.place_forget()
             
         self.views[view_name].place(x=0, y=0, relwidth=1, relheight=1)
-        if view_name == "saved":
-            self.views["saved"].load_cities()
             
     def toggle_menu(self):
         if self.menu_visible:
@@ -77,7 +72,11 @@ class App(ctk.CTk):
             self.menu_visible = True
 
     def show_calendar(self):
-        CalendarView(self, self)
+        if hasattr(self, 'calendar_window') and self.calendar_window is not None and self.calendar_window.winfo_exists():
+            self.calendar_window.focus()
+            self.calendar_window.lift()
+        else:
+            self.calendar_window = CalendarView(self, self)
 
     def show_export_dialog(self):
         ExportDialog(self, self)

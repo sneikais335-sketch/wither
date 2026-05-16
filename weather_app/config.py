@@ -6,49 +6,62 @@ OWM_API_KEY = "f0070f4e338513f27ceb7f7f67f1bb47"  # Placeholder as requested by 
 
 COLORS = {
     # Page background
-    "bg_page":         "#E8EEF7",   # Light blueish background
+    "bg_page":         "#F3F7FF",   # Soft light blue background
+    "bg_gradient_top": "#E8F0FF",   # Gradient start for large background areas
+    "bg_gradient_bottom": "#F8FBFF",   # Gradient end for large background areas
     "bg_card":         "#FFFFFF",   # White cards
-    "bg_main_card":    "#6B7B94",   # Dark grey main card (city + weather)
+    "bg_card_light":   "#F8FAFF",   # Slight off-white cards for separation
+    "bg_main_card":    "#556A96",   # Dark blue main card
+    "bg_main_card_alt":"#42618C",   # Alternative darker shade for main card
 
-    # Accent colors - "Weather Forecast" title
+    # Accent colors
     "accent_blue":     "#4A7AE8",   # "Weather" (blue)
     "accent_purple":   "#8B5CF6",   # "Forecast" (purple)
+    "accent_gradient": ("#7C3AED", "#3B82F6"), # Purple to Blue gradient
 
     # Menu (sidebar)
-    "menu_header_bg":  "#7C3AED",   # Gradient from blue to purple (top)
-    "menu_header_bg2": "#3B82F6",   # (bottom of gradient)
-    "menu_item_bg":    "#F3F4F6",   # Menu item background
+    "menu_header_bg":  "#7C3AED",
+    "menu_header_bg2": "#3B82F6",
+    "menu_item_bg":    "#F3F4F6",
     "menu_item_hover": "#E5E7EB",
+    "menu_icon_saved": "#0EA5E9",   # Light blue for Saved Cities icon box
+    "menu_icon_set":   "#D946EF",   # Pink/Purple for Settings icon box
 
     # Stat tiles (icons)
-    "icon_humidity":   "#3B82F6",   # Blue (Humidity)
-    "icon_wind":       "#10B981",   # Green (Wind Speed)
-    "icon_visibility": "#8B5CF6",   # Purple (Visibility)
-    "icon_pressure":   "#F97316",   # Orange (Pressure)
-    "icon_dew":        "#EC4899",   # Pink (Dew Point)
-    "icon_uv":         "#EAB308",   # Yellow (UV Index)
-
-    # Temperature chart
-    "chart_bar":       "#93C5FD",   # Light blue bar
-    "chart_bar_tall":  "#3B82F6",   # Dark blue for tall bars
-
-    # 7-Day Forecast - temperature bar
-    "temp_bar_cold":   "#86EFAC",   # Green (min temp)
-    "temp_bar_hot":    "#FDE047",   # Yellow (max temp)
-
-    # Saved cities cards
-    "city_card_bg":    "#3730A3",   # Dark blue/purple
-    "city_card_sub":   "#4F46E5",   # Shade for tiles inside the card
-
-    # "Search" button
-    "btn_search_bg":   "#111827",   # Almost black
-    "btn_search_text": "#FFFFFF",
+    "icon_humidity":   "#3B82F6",
+    "icon_wind":       "#10B981",
+    "icon_visibility": "#8B5CF6",
+    "icon_pressure":   "#F97316",
+    "icon_dew":        "#EC4899",
+    "icon_uv":         "#EAB308",
 
     # Text
     "text_primary":    "#111827",
     "text_secondary":  "#6B7280",
     "text_white":      "#FFFFFF",
-    "text_link":       "#3B82F6",   # Popular cities links
+    "text_link":       "#3B82F6",
+    "btn_search_bg":   "#4A7AE8",   # Matching accent_blue
+    "chart_bar":       "#4A7AE8",   # Main blue color for bars
+    "temp_bar_hot":    "#F97316",   # Orange for warmer days
+    "temp_bar_cold":   "#3B82F6",   # Blue for colder days
+}
+
+# Icon Mapping (Asset filenames)
+ICONS = {
+    "location":   "location.png",
+    "settings":   "settings.png",
+    "humidity":   "humidity.png",
+    "wind":       "wind.png",
+    "visibility": "visibility.png",
+    "pressure":   "pressure.png",
+    "dew_point":  "dew_point.png",
+    "uv_index":   "uv_index.png",
+    "trash":      "trash.png",
+    "globe":      "globe.png",
+    "sun":        "sun.png",
+    "cloud":      "cloud.png",
+    "cloud_white":"cloud_white.png",
+    "rain":       "rain.png",
 }
 
 FONTS = {

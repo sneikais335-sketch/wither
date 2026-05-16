@@ -15,6 +15,7 @@ class ExportDialog(ctk.CTkToplevel):
         self.configure(fg_color=COLORS["bg_page"])
 
         self._build_ui()
+        self.wait_visibility()
         self.grab_set()
 
     def _build_ui(self):

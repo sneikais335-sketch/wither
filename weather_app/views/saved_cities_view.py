@@ -25,12 +25,12 @@ class SavedCitiesView(ctk.CTkFrame):
         header.pack(fill="x", pady=(20, 0))
         header.pack_propagate(False)
 
-        btn_back = ctk.CTkButton(
-            header, text="← Back", width=60, fg_color="transparent", 
+        self.btn_back = ctk.CTkButton(
+            header, text=self.app.lang.t("back"), width=60, fg_color="transparent", 
             text_color=COLORS["text_primary"], font=FONTS["btn_text"],
             hover_color=COLORS["menu_item_hover"], command=lambda: self.app.show_view("main")
         )
-        btn_back.pack(side="left", padx=(0, 20))
+        self.btn_back.pack(side="left", padx=(0, 20))
 
         title_frame = ctk.CTkFrame(header, fg_color="transparent")
         title_frame.pack(side="left")
@@ -103,5 +103,6 @@ class SavedCitiesView(ctk.CTkFrame):
         self.load_cities() # Reload the view
 
     def refresh_texts(self):
+        self.btn_back.configure(text=self.app.lang.t("back"))
         self.lbl_title.configure(text=self.app.lang.t("saved_cities"))
         self.load_cities()

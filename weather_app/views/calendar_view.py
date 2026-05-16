@@ -50,12 +50,24 @@ class CalendarView(ctk.CTkToplevel):
         self.events_frame = ctk.CTkScrollableFrame(self, fg_color="transparent", height=100)
         self.events_frame.pack(fill="both", expand=True, padx=10, pady=(0, 10))
 
+        self.add_frame = ctk.CTkFrame(self, fg_color="transparent")
+        self.entry_title = ctk.CTkEntry(self.add_frame, placeholder_text="Title", width=360)
+        self.entry_title.pack(pady=5)
+        self.entry_note = ctk.CTkEntry(self.add_frame, placeholder_text="Note", width=360)
+        self.entry_note.pack(pady=5)
+        self.btn_save = ctk.CTkButton(self.add_frame, text="Save", command=self._save_event, fg_color=COLORS["accent_blue"])
+        self.btn_save.pack(pady=5)
+
         self.btn_add = ctk.CTkButton(
-            self, text=self.app.lang.t("add_event"), 
+            self, text="+ Добавить событие", 
             font=FONTS["btn_text"], fg_color=COLORS["accent_blue"],
-            command=self._add_event_dialog
+            command=self._show_add_form
         )
         self.btn_add.pack(pady=10)
+
+    def _show_add_form(self):
+        self.btn_add.pack_forget()
+        self.add_frame.pack(fill="x", padx=10, pady=10)
 
     def update_calendar(self):
         self.lbl_month.configure(text=self.current_date.strftime("%B %Y"))
@@ -141,12 +153,16 @@ class CalendarView(ctk.CTkToplevel):
             btn_del = ctk.CTkButton(f, text="✕", width=20, fg_color="transparent", text_color="#EF4444", command=lambda id=e['id']: self._del_event(id))
             btn_del.pack(side="right", padx=5)
 
-    def _add_event_dialog(self):
-        dialog = ctk.CTkInputDialog(text="Enter event title:", title="Add Event")
-        # In CustomTkinter, dialog blocks but must be shown. Actually CTkInputDialog handles its own window.
-        title = dialog.get_input()
+    def _save_event(self):
+        title = self.entry_title.get().strip()
+        note = self.entry_note.get().strip()
         if title:
-            CalendarDB.add_event(self.selected_date.strftime("%Y-%m-%d"), title)
+            full_title = f"{title} - {note}" if note else title
+            CalendarDB.add_event(self.selected_date.strftime("%Y-%m-%d"), full_title)
+            self.entry_title.delete(0, 'end')
+            self.entry_note.delete(0, 'end')
+            self.add_frame.pack_forget()
+            self.btn_add.pack(pady=10)
             self.update_calendar()
 
     def _del_event(self, event_id):

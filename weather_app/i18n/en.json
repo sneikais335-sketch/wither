@@ -34,11 +34,26 @@
   "export_btn": "Export ▾",
   "save": "Save",
   "days": {
-    "Monday": "Monday", "Tuesday": "Tuesday", "Wednesday": "Wednesday",
-    "Thursday": "Thursday", "Friday": "Friday", "Saturday": "Saturday", "Sunday": "Sunday"
+    "Monday": "Monday",
+    "Tuesday": "Tuesday",
+    "Wednesday": "Wednesday",
+    "Thursday": "Thursday",
+    "Friday": "Friday",
+    "Saturday": "Saturday",
+    "Sunday": "Sunday"
   },
   "conditions": {
-    "Sunny": "Sunny", "Partly Cloudy": "Partly Cloudy",
-    "Cloudy": "Cloudy", "Rainy": "Rainy", "Snowy": "Snowy", "Foggy": "Foggy", "Clear": "Clear"
-  }
+    "Sunny": "Sunny",
+    "Partly Cloudy": "Partly Cloudy",
+    "Cloudy": "Cloudy",
+    "Rainy": "Rainy",
+    "Snowy": "Snowy",
+    "Foggy": "Foggy",
+    "Clear": "Clear"
+  },
+  "settings_sub": "Customize your weather experience",
+  "back": "← Back",
+  "unit_desc": "Switch between Celsius and Fahrenheit",
+  "alert_desc": "Get notified about severe weather updates",
+  "loc_desc": "Automatically find your city using IP location"
 }
